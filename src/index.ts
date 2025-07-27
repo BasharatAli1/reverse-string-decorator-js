@@ -15,20 +15,21 @@ function reverse(target: any, propertyKey: string, descriptor: PropertyDescripto
         originalMethod.apply(this, [reversedArg]);
     }
 }
-
-function join(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-    const originalMethod = descriptor.value;
-    descriptor.value = function(...args: any []) {
-        const [arg] = args;
-        const joinedArg = arg.join('');
-        originalMethod.apply(this, [joinedArg]);
+function join(char: string) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        const originalMethod = descriptor.value;
+        descriptor.value = function(...args: any []) {
+            const [arg] = args;
+            const joinedArg = arg.join(char);
+            originalMethod.apply(this, [joinedArg]);
+        }
     }
 }
 
 class StringManager {
     @split
     @reverse
-    @join
+    @join('-')
     print(str: string): void {
         console.log(str);
     }
